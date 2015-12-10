@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Canvas tutorial</title>
+    <script type="text/javascript">
+    //Function adapted from this Stackoverflow Answer: http://stackoverflow.com/questions/24563734/canvas-drawing-dashed-line-with-arrow
+    function canvas_arrow_alternate2(context, fromx, fromy, tox, toy, strokeStyle){
+      var headlen = 12;   // length of head in pixels
+      var angle = Math.atan2(toy-fromy,tox-fromx);
+      context.save();
+      context.strokeStyle=strokeStyle || '#000'; // defaults to black
+      // dashed part
+      context.beginPath();
+      context.setLineDash([4]);
+      context.moveTo(fromx, fromy);
+      context.lineTo(tox, toy);
+      context.stroke();
+      // second part -non dashed-
+      context.beginPath();
+      context.setLineDash([0]);
+      context.moveTo(tox, toy);
+      context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy-headlen*Math.sin(angle-Math.PI/6));
+      context.moveTo(tox, toy);
+      context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
+      context.stroke();
+      //
+      context.restore();          // this will, in fact, restore strokeStyle
+    }
+
+      function rectangle(ctx,x,y){
+          ctx.fillStyle = "rgb(200,0,0)";
+          ctx.fillRect(x, y, 50, 50);
+          ctx.fillStyle = "rgb(255,255,255)";
+          ctx.font = "25px serif";
+          ctx.fillText("R1", x+10, y+30);
+      }
+
+      function draw(){
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext){
+          var ctx = canvas.getContext('2d');
+          rectangle(ctx,0,0);
+          rectangle(ctx,75,75);
+          canvas_arrow_alternate2(ctx, 50,50,75,75);
+        }
+        else {
+          // canvas-unsupported code here
+        }
+      }
+    </script>
+    <style type="text/css">
+      canvas { border: 1px solid black; }
+    </style>
+  </head>
+  <body onload="draw();">
+    <canvas id="tutorial" width="400" height="400"></canvas>
+  </body>
+</html>
